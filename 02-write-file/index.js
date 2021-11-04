@@ -15,7 +15,7 @@ const rl = readline.createInterface({
 rl.prompt();
 
 rl.on('line', (input) => {
-   if (input === 'exit') {
+   if (input.trim() === 'exit') {
       rl.close();
       process.exit()
    }
