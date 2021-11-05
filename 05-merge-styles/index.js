@@ -1,43 +1,34 @@
 const fs = require("fs");
+const { writeFile, readdir, stat } = require("fs/promises");
 const path = require('path')
 
 const src = path.join(__dirname, "styles");
-const dist = path.join(__dirname, "project-dist");
-const bundleCss = path.join(dist, 'bundle.css');
+const dist = path.join(__dirname, "project-dist", 'bundle.css');
 
-fs.mkdir(dist, { recursive: true }, err => {
-   if (err) throw err;
-});
+toBundle(src, dist, '.css')
 
-fs.writeFile(bundleCss, "", (err) => {
-   if (err) throw err;
-});
+async function toBundle(src, dist, ext) {
 
-fs.readdir(src, (err, files) => {
-   if (err) throw err;
+   await writeFile(dist, "");
+   const files = await readdir(src);
 
    for (const file of files) {
 
       const srcFile = path.join(src, file);
+      const status = await stat(srcFile);
 
-      fs.stat(srcFile, (errStat, status) => {
+      if (status.isFile() && path.extname(srcFile) === ext) {
 
-         if (errStat) throw errStat;
+         const stream = new fs.ReadStream(srcFile, { encoding: 'utf-8' });
 
-         const { ext } = path.parse(srcFile)
-         if (status.isFile() && ext === '.css') {
-
-            const stream = new fs.ReadStream(srcFile, { encoding: 'utf-8' });
-
-            stream.on("readable", () => {
-               const data = stream.read();
-               if (data) {
-                  fs.appendFile(bundleCss, data, (err) => {
-                     if (err) throw err;
-                  });
-               }
-            });
-         }
-      });
+         stream.on("readable", () => {
+            const data = stream.read();
+            if (data) {
+               fs.appendFile(dist, data, (err) => {
+                  if (err) throw err;
+               });
+            }
+         });
+      }
    }
-});
+}
