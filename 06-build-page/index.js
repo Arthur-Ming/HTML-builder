@@ -1,5 +1,5 @@
 const fs = require("fs");
-const { mkdir, rmdir, readdir, writeFile, copyFile, stat } = require('fs/promises');
+const { mkdir, rm, readdir, writeFile, copyFile, stat } = require('fs/promises');
 const path = require('path')
 
 const dist = {
@@ -19,8 +19,7 @@ const src = {
 build(src, dist)
 
 async function build(src, dist) {
-
-   await rmdir(dist.path, { recursive: true });
+   await rm(dist.path, { force: true, recursive: true })
    await mkdir(dist.path, { recursive: true });
 
    const template = await getDataFromFile(src.html)
