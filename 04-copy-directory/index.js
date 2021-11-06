@@ -1,10 +1,10 @@
-const { mkdir, rmdir, readdir, copyFile } = require('fs/promises');
+const { mkdir, rm, readdir, copyFile } = require('fs/promises');
 const path = require('path')
 
 const dir = path.join(__dirname, "files");
 const dirCopy = path.join(__dirname, "files-copy");
 
-rmdir(dirCopy, { recursive: true }).then(() => {
+rm(dirCopy, { force: true, recursive: true }).then(() => {
    copyDir(dir, dirCopy)
 })
 
