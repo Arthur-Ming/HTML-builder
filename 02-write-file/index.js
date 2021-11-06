@@ -9,7 +9,7 @@ const stream = new fs.WriteStream(text, { encoding: 'utf-8' });
 const rl = readline.createInterface({
    input: process.stdin,
    output: process.stdout,
-   prompt: 'Enter your text: '
+   prompt: 'Enter your text:\n'
 });
 
 rl.prompt();
