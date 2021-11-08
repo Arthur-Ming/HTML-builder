@@ -56,7 +56,7 @@ async function getHTML(template, src) {
    for (const component of components) {
       const htmlSrc = path.join(src, `${component}.html`)
       const data = await getDataFromFile(htmlSrc)
-      result = result.replace(`{{${component}}}`, data)
+      result = result.replaceAll(`{{${component}}}`, data)
    }
    return result
 }
