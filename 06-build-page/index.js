@@ -23,7 +23,7 @@ async function build(src, dist) {
    await mkdir(dist.path, { recursive: true });
 
    const template = await getDataFromFile(src.html)
-   const html = await getHTML(template)
+   const html = await getHTML(template, src.components)
 
    writeToFile(html, dist.html)
    copyDir(src.assets, dist.assets);
@@ -48,14 +48,13 @@ async function getDataFromFile(dir) {
    });
 }
 
-async function getHTML(data) {
+async function getHTML(template, src) {
 
-   const components = await getComponentsNames(path.join(__dirname, 'components'))
-
-   let result = data;
+   const components = await getComponentsNames(src)
+   let result = template;
 
    for (const component of components) {
-      const htmlSrc = path.join(__dirname, 'components', `${component}.html`)
+      const htmlSrc = path.join(src, `${component}.html`)
       const data = await getDataFromFile(htmlSrc)
       result = result.replace(`{{${component}}}`, data)
    }
@@ -125,10 +124,4 @@ async function getComponentsNames(dir) {
 
    return result
 }
-
-
-
-
-
-
 
